@@ -14,10 +14,10 @@ block content
 					input.form-control(type='email', name='email', id='email', placeholder='Email')
 				div.form-group
 					label.control-label(for='password') Password
-					input.form-control(type='password', name='password', id='password')
+					input.form-control(type='password', name='password', id='password', placeholder='Enter Password')
 				div.form-group
 					label.control-label(for='verification') Repeat password
-					input.form-control(type='password', name='verification', id='verification')
+					input.form-control(type='password', name='confirm_password', id='confirm-password', placeholder='Confirm Password')
 				if error
 					div.alert #{error}
-				input.btn.btn-primary(type='submit', value='Sign up', ng-disabled='form.$invalid')
+				input.btn.btn-primary(type='submit', value='Sign up')
