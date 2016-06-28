@@ -1,11 +1,9 @@
 extends layout
 
 block content
-	h1= title
-	p Welcome to #{title}
 	.container
 		form.form-signin(action='/login', method='post')
-			h2.form-signin-heading Please Sign In
+			h2.form-signin-heading Sign In
 			input.input-block-level(type='text', name='username', placeholder='Email address')
 			input.input-block-level(type='password', name='password', placeholder='Password')
 			label.checkbox.

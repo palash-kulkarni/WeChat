@@ -5,15 +5,15 @@ module.exports = function(sequelize, DataTypes) {
     username: {
       type: DataTypes.STRING,
       allowNull: false,            // won't allow null
-      unique: true              // will allow only unique
+      unique: true                 // will allow only unique
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,            // won't allow null
+      allowNull: false             // won't allow null
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,            // won't allow null
+      allowNull: false
     }
   }, {
     classMethods: {

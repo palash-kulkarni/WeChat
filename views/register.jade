@@ -1,23 +1,25 @@
 extends layout
 
 block content
-	div.col-lg-offset-4.col-lg-4
-		div.panel
-			div.panel-heading.text-center
-				h3 Sign Up
-			form(name='form', method='post', action='/users/signup')
-				div.form-group
-					label.control-label(for='username') Username
-					input.form-control(type='text', name='username', id='username', placeholder='Username')
-				div.form-group
-					label.control-label(for='email') Email
-					input.form-control(type='email', name='email', id='email', placeholder='Email')
-				div.form-group
-					label.control-label(for='password') Password
-					input.form-control(type='password', name='password', id='password', placeholder='Enter Password')
-				div.form-group
-					label.control-label(for='verification') Repeat password
-					input.form-control(type='password', name='confirm_password', id='confirm-password', placeholder='Confirm Password')
-				if error
-					div.alert #{error}
-				input.btn.btn-primary(type='submit', value='Sign up')
+  div.col-lg-offset-4.col-lg-4
+    div.panel
+      div.panel-heading.text-center
+        h3 Sign Up
+      if errors
+        ul
+          for error in errors
+            li!= error.msg
+      form(name='form', method='post', action='/users/signup')
+        div.form-group
+          label.control-label(for='username') Username
+          input.form-control(type='text', name='username', id='username', placeholder='Username')
+        div.form-group
+          label.control-label(for='email') Email
+          input.form-control(type='email', name='email', id='email', placeholder='Email')
+        div.form-group
+          label.control-label(for='password') Password
+          input.form-control(type='password', name='password', id='password', placeholder='Enter Password')
+        div.form-group
+          label.control-label(for='verification') Repeat password
+          input.form-control(type='password', name='confirm_password', id='confirm-password', placeholder='Confirm Password')
+        input.btn.btn-primary(type='submit', value='Sign up')

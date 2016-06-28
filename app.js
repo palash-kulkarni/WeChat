@@ -6,10 +6,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 // MySQL Module
 var mysql = require('mysql');
-// Performance 
+// Performance
 var compression = require('compression');
 // Helmet protect app from web vulnerablities by setting HTTP headers appropriately.
 var helmet = require('helmet');
+var validator = require('express-validator');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -18,6 +19,23 @@ var app = express();
 
 app.use(compression());
 app.use(helmet());
+app.use(validator());
+app.use(validator({
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
+
+    while(namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
