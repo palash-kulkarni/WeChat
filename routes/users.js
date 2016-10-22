@@ -2,6 +2,32 @@ var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt');
 
+router.post('/login', function(req, res, next) {
+	var username = req.body.username;
+	var password = req.body.password;
+	if (username && password) {
+		var User = req.app.models.user;
+		User.findOne({ username: username }, function(err, user) {
+			if (err)
+				return res.status(400).send();
+			else {
+				bcrypt.compare(password, user.password, function(err, isMatch) {
+		      if (err) {
+		      	return res.status(500).send();
+		      }
+		      if (isMatch) {
+		      	req.session.user = req.body.username;
+		      	return res.redirect('/users/dashboard');
+		      } else
+		  			return res.render('home', { title: 'Express' });
+		    });
+		  }
+		});
+	} else {
+		return res.render('home', { title: 'Express' });
+	}
+});
+
 router.get('/dashboard', function(req, res, next) {
 	if (!req.session.user)
 		res.redirect('/').send("You're not logged in");
@@ -29,7 +55,7 @@ router.post('/signup', function(req, res, next) {
 				var newUser = { username: req.body.username,
 										 		email: req.body.email,
 										 		password: encrypted_password };
-				User = req.app.models.user;
+				var User = req.app.models.user;
 				User.create(newUser)
 					.then(function () {
 						req.session.user = newUser.username;
