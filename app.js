@@ -4,13 +4,14 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-// MySQL Module
-var mysql = require('mysql');
+var mongoose = require('mongoose');
+var _ = require('lodash');
 // Performance
 var compression = require('compression');
 // Helmet protect app from web vulnerablities by setting HTTP headers appropriately.
 var helmet = require('helmet');
 var validator = require('express-validator');
+
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -60,17 +61,14 @@ app.use(function(req, res, next) {
 });
 
 // Database connection
-var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'pkul',
-  port: '3306',
-  password: 'pkul',
-  database: 'myapp_database'
-});
+mongoose.connect('mongodb://localhost/wechat');
 
-connection.connect(function(err) {
-  if (err) throw err
-  console.log('You are now connected...');
+mongoose.connection.once('open', function () {
+  // Load all models
+  app.models = require('./models/index');
+
+  console.log('Listening on port 3001...');
+  app.listen(3001);
 });
 
 // error handlers

@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var models  = require('../models');
 var bcrypt = require('bcrypt');
 
 /* GET users listing. */
@@ -21,14 +20,15 @@ router.post('/signup', function(req, res, next) {
 	} else {
 		bcrypt.genSalt(10, function(err, salt) {
 			bcrypt.hash(req.body.password, salt, function(err, encrypted_password) {
-				user = models.User.build({ username: req.body.username,
-														 			 email: req.body.email,
-														 			 password: encrypted_password });
-				user.save()
+				var newUser = { username: req.body.username,
+										 		email: req.body.email,
+										 		password: encrypted_password };
+				User = req.app.models.user;
+				User.create(newUser)
 					.then(function () {
-		        res.redirect('/');
+						res.redirect('/');
 		      }).catch(function (err) {
-		        console.log(err);
+		        res.render('register');
 		      });
 			});
 		});
