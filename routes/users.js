@@ -2,13 +2,19 @@ var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-	res.send('respond with a resource');
+router.get('/dashboard', function(req, res, next) {
+	if (!req.session.user)
+		res.redirect('/').send("You're not logged in");
+	else
+		res.render('dashboard', { title: 'Dashboard',
+			notice: req.session.user + ' is logged-in successfully.' });
 });
 
 router.get('/register', function(req, res, next) {
-	res.render('register', { title: 'Sign Up' });
+	if (!req.session.user)
+		res.render('register', { title: 'Sign Up' });
+	else
+		res.redirect('/users/dashboard');
 });
 
 router.post('/signup', function(req, res, next) {
@@ -26,7 +32,8 @@ router.post('/signup', function(req, res, next) {
 				User = req.app.models.user;
 				User.create(newUser)
 					.then(function () {
-						res.redirect('/');
+						req.session.user = newUser.username;
+						res.redirect('/users/dashboard');
 		      }).catch(function (err) {
 		        res.render('register');
 		      });
@@ -35,6 +42,7 @@ router.post('/signup', function(req, res, next) {
 	}
 });
 
+// move this code to User model
 var validateUser = function (req) {
 	req.checkBody({
 	 'email': {

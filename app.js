@@ -6,12 +6,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var _ = require('lodash');
+var config = require('./config');
 // Performance
 var compression = require('compression');
 // Helmet protect app from web vulnerablities by setting HTTP headers appropriately.
 var helmet = require('helmet');
 var validator = require('express-validator');
-
+var session = require('express-session');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -20,7 +21,6 @@ var app = express();
 
 app.use(compression());
 app.use(helmet());
-app.use(validator());
 app.use(validator({
   errorFormatter: function(param, msg, value) {
       var namespace = param.split('.')
@@ -48,6 +48,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({ secret: config.secret, resave: false, saveUninitialized: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
@@ -61,7 +62,7 @@ app.use(function(req, res, next) {
 });
 
 // Database connection
-mongoose.connect('mongodb://localhost/wechat');
+mongoose.connect(config.database);
 
 mongoose.connection.once('open', function () {
   // Load all models
